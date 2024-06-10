@@ -1,0 +1,106 @@
+body {
+    font-family: 'Cascadia Code', 'Courier New', monospace;
+    background-color: #0D0208;
+    color: #00FF41;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #000;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 255, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid #00FF41;
+}
+
+h1 {
+    font-size: 24px;
+    color: #00FF41;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #00FF41;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #00FF41;
+    border-radius: 4px;
+    background-color: #000;
+    color: #00FF41;
+    box-shadow: inset 0 0 5px #00FF41;
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between; /* Les boutons seront espacés sur la ligne */
+    width: 100%; /* Utilise toute la largeur disponible */
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #000;
+    background-color: #00FF41;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-right: 10px; /* Espacement entre les boutons */
+}
+
+button:last-child {
+    margin-right: 0; /* Pas de marge à droite pour le dernier bouton */
+}
+
+
+
+button:hover {
+    background-color: #00cc33;
+    transform: scale(1.05);
+}
+
+.result {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: left;
+    word-break: break-word;
+    white-space: pre-line; /* Preserve line breaks */
+}
+
+.result.success {
+    color: #00FF41;
+    background-color: rgba(0, 255, 0, 0.1);
+    border: 1px solid #00FF41;
+    box-shadow: 0 0 10px #00FF41;
+}
+
+.result.error {
+    color: #FF0000;
+    background-color: rgba(255, 0, 0, 0.1);
+    border: 1px solid #FF0000;
+    box-shadow: 0 0 10px #FF0000;
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crawlia Web Scraper</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cascadia+Code:wght@400;700&display=swap">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Crawlia Web Scraper</h1>
+        <form id="urlForm">
+            <input type="text" id="urlInput" placeholder="Enter URL to analyze">
+            <div class="button-container">
+                <button type="submit">Analyze</button>
+                <button type="button" id="clearButton">Clear</button> <!-- Bouton pour effacer -->
+            </div>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        // Fonction pour vérifier si l'URL est valide
+        function isValidURL(url) {
+            // Expression régulière pour valider le format de l'URL
+            const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // Protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // Domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR IP (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // Port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // Query string
+                '(\\#[-a-z\\d_]*)?$','i'); // Fragment locator
+            return !!urlPattern.test(url);
+        }
+
+        document.getElementById('urlForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const url = document.getElementById('urlInput').value.trim();
+            if (!isValidURL(url)) {
+                alert('Please enter a valid URL');
+                return;
+            }
+            analyzeUrl();
+        });
+
+        // Fonction pour stopper l'analyse
+        document.getElementById('stopButton').addEventListener('click', function() {
+            // Ajoutez ici le code pour arrêter l'analyse en cours
+            // Par exemple, vous pouvez annuler la requête fetch en cours
+            // ou arrêter le traitement côté serveur
+
+        });
+
+        // Fonction pour effacer les résultats
+        document.getElementById('clearButton').addEventListener('click', function() {
+            document.getElementById('result').textContent = '';
+        });
+
+        function animateText(element, text) {
+            let index = 0;
+            const interval = 50; // Intervalle entre chaque caractère en ms
+            element.textContent = ''; // Réinitialise le texte avant l'animation
+
+            const animate = () => {
+                if (index < text.length) {
+                    element.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(animate, interval);
+                }
+            };
+
+            animate();
+        }
+
+        function analyzeUrl() {
+            const url = document.getElementById('urlInput').value.trim();
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+
+            const resultElement = document.getElementById('result');
+            resultElement.textContent = '';
+            resultElement.classList.remove('error', 'success');
+            animateText(resultElement, 'Analyzing...');
+
+            fetch('/performance-test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: url })
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultElement.textContent = '';
+                if (data.error) {
+                    resultElement.textContent = 'An error occurred: ' + data.error;
+                    resultElement.classList.add('error');
+                } else {
+                    const resultText = `
+                        TTFB: ${data.ttfb} ms\n
+                        SEO Issues: ${data.seoIssues.length > 0 ? data.seoIssues.join(', ') : 'None'}\n
+                        Dead Links: ${data.deadLinks.length > 0 ? data.deadLinks.join(', ') : 'None'}\n
+                        Social Media Tags: ${data.socialMediaTags}\n
+                        Missing Alt Attributes: ${data.missingAlts.length > 0 ? data.missingAlts.join(', ') : 'None'}
+                    `;
+                    animateText(resultElement, resultText);
+                    resultElement.classList.add('success');
+                }
+            })
+            .catch(error => {
+                resultElement.textContent = 'An error occurred: ' + error.message;
+                resultElement.classList.add('error');
+            });
+        }
+    </script>
+</body>
+</html>
