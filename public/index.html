@@ -14,7 +14,7 @@
             <input type="text" id="urlInput" placeholder="Enter URL to analyze">
             <div class="button-container">
                 <button type="submit">Analyze</button>
-                <button type="button" id="clearButton">Clear</button> <!-- Bouton pour effacer -->
+                <button type="button" id="clearButton">Clear</button>
             </div>
         </form>
         <div id="result" class="result"></div>
@@ -23,13 +23,12 @@
     <script>
         // Fonction pour vérifier si l'URL est valide
         function isValidURL(url) {
-            // Expression régulière pour valider le format de l'URL
-            const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // Protocol
-                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // Domain name
-                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR IP (v4) address
-                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // Port and path
-                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // Query string
-                '(\\#[-a-z\\d_]*)?$','i'); // Fragment locator
+            const urlPattern = new RegExp('^(https?:\\/\\/)?'+ 
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ 
+                '((\\d{1,3}\\.){3}\\d{1,3}))'+ 
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ 
+                '(\\?[;&a-z\\d%_.~+=-]*)?'+ 
+                '(\\#[-a-z\\d_]*)?$','i'); 
             return !!urlPattern.test(url);
         }
 
@@ -43,18 +42,22 @@
             analyzeUrl();
         });
 
-        // Fonction pour stopper l'analyse
-        document.getElementById('stopButton').addEventListener('click', function() {
-            // Ajoutez ici le code pour arrêter l'analyse en cours
-            // Par exemple, vous pouvez annuler la requête fetch en cours
-            // ou arrêter le traitement côté serveur
-
-        });
-
-        // Fonction pour effacer les résultats
+        // Fonction pour effacer les résultats et réinitialiser le formulaire
         document.getElementById('clearButton').addEventListener('click', function() {
-            document.getElementById('result').textContent = '';
+            // Réinitialiser le champ d'entrée
+            document.getElementById('urlInput').value = '';
+            // Réinitialiser le contenu et les classes de résultat
+            const resultElement = document.getElementById('result');
+            resultElement.textContent = '';
+            resultElement.classList.remove('error', 'success');
+            // Stopper toute animation en cours en remplaçant les setTimeout restants
+            if (window.animateTimeouts) {
+                window.animateTimeouts.forEach(timeout => clearTimeout(timeout));
+            }
+            window.animateTimeouts = []; // Réinitialiser le tableau des timeouts d'animation
         });
+
+        window.animateTimeouts = []; // Garde une trace des timeouts d'animation
 
         function animateText(element, text) {
             let index = 0;
@@ -65,7 +68,8 @@
                 if (index < text.length) {
                     element.textContent += text.charAt(index);
                     index++;
-                    setTimeout(animate, interval);
+                    const timeoutId = setTimeout(animate, interval);
+                    window.animateTimeouts.push(timeoutId); // Enregistrer le timeout
                 }
             };
 
