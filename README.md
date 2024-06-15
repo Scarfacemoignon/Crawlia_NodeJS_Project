@@ -17,6 +17,11 @@ crawlia analyse :
 - Missing Alt Attributes
 ```
 
+## How to get the code 
+```
+git clone https://github.com/Scarfacemoignon/Crawlia_NodeJS_Project.git
+```
+
 ## How to execute the code 
 
 #### Initialize the Project:
